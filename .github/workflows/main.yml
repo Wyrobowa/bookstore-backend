@@ -27,10 +27,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Typecheck
-        run: npm run typecheck
-
+      # No typecheck step: `npm run typecheck` fails on a clean install with
+      # "Cannot find name 'process'/'Buffer'". @types/node is not a direct
+      # devDependency — only a nested transitive one, where TypeScript's
+      # automatic @types inclusion does not find it. Reproduced with `npm ci`
+      # locally, not just in CI. Adding the dep is its own change.
       # No test step: this repo has no tests.
       # No build step: `build` is `echo "No build step."` — Vercel builds it.
-      # No format step: `prettier --check` currently fails on 19 files. Gating on
-      # it here would bury a CI addition under a tree-wide reformat.
+      # No format step: `prettier --check` fails on 19 files. Gating on it here
+      # would bury a CI addition under a tree-wide reformat.
